@@ -44,11 +44,19 @@ object DisplayUtil {
 
     /**
      * 获取设备状态栏的高度
+     * 兼容全面屏
      */
     private fun getStatusBarHeight(context: Activity): Int {
-        val frame = Rect()
-        context.window.decorView.getWindowVisibleDisplayFrame(frame)
-        var statusBarHeight = frame.top
+        var statusBarHeight = this.statusBarHeight
+        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            statusBarHeight = context.resources.getDimensionPixelSize(resourceId)
+        }
+        if(statusBarHeight == 0) {
+            val frame = Rect()
+            context.window.decorView.getWindowVisibleDisplayFrame(frame)
+            statusBarHeight = frame.top
+        }
         if (statusBarHeight == 0) {
             statusBarHeight = context.resources.getDimensionPixelOffset(R.dimen.status_bar_height)
         }
